@@ -2,6 +2,7 @@ import logging
 import sys
 import os
 import shutil
+import json
 
 logger = logging.getLogger('goodtools')
 logger.setLevel(logging.DEBUG)
@@ -52,13 +53,13 @@ locale_priority = [
 ]
 
 
-for directory_name in directory_names:
+for directory_name in directory_names[1:]:
     file_names = os.listdir(directory_name)
 
     # if the whole directory is unlicensed, just take all the files
     if all('(Unl)' in x for x in file_names):
-        file_names.append('')
-        unlicensed_names.extend(file_names)
+        for file_name in file_names:
+            unlicensed_names.append(directory_name + '/' + file_name)
         continue
 
     final_name = None
@@ -74,17 +75,62 @@ for directory_name in directory_names:
                 locale_and_exclamation_files.append(file_name)
 
         if len(locale_and_exclamation_files) == 0:
+            #logger.debug('locale {} not found at all for directory'.format(locale, directory_name))
             continue
         elif len(locale_and_exclamation_files) == 1:
-            final_name = file_name
+            final_name = locale_and_exclamation_files[0]
+            #logger.debug('Locale for {}: {}'.format(directory_name, locale))
             break
 
     if final_name:
-        unambiguous_names.append(directory_name + '/' + file_name)
+        unambiguous_names.append(directory_name + '/' + final_name)
     else:
         ambiguous_names.append(directory_name)
+        continue
+
+        choices = {
+            'n': 'none',
+            'a': 'all'
+        }
+
+        for idx, file_name in enumerate(file_names):
+            choices[str(idx)] = file_name
+
+        message = ''
+        for key, value in choices.items():
+            message += key + ' - ' + value + '\n'
+
+        choice = None
+        while True:
+            user_input = input(message)
+            #logger.debug('got user input: {}'.format(user_input))
+            if user_input in choices:
+                choice = choices[user_input]
+                break
+
+        if choice == 'none':
+            logger.debug('Continuing without adding any roms from {}.'.format(directory_name))
+            continue
+        elif choice == 'all':
+            logger.debug('Adding all roms from {}.'.format(directory_name))
+            unambiguous_names.extend(file_names)
+        else:
+            logger.debug('Adding {}.'.format(choice))
+            unambiguous_names.append(choice)
 
 logger.debug('Automatically detected {} of {} files.'.format(len(unambiguous_names), len(directory_names)))
 logger.debug('{} of {} files need manual selection.'.format(len(ambiguous_names), len(directory_names)))
 
-from IPython import embed; embed()
+# include the unlicensed names
+unambiguous_names.extend(unlicensed_names)
+
+# create json to document all the file names we want
+file_json = {
+    'files': unambiguous_names
+}
+
+# back up the file names in case shit goes wrong
+with open('file_list.json', 'w') as output_file:
+    json.dump(file_json, output_file)
+
+#from IPython import embed; embed()
