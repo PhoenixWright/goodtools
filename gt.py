@@ -4,6 +4,8 @@ import os
 import shutil
 import json
 
+from collections import OrderedDict
+
 logger = logging.getLogger('goodtools')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -86,12 +88,11 @@ for directory_name in directory_names[1:]:
         unambiguous_names.append(directory_name + '/' + final_name)
     else:
         ambiguous_names.append(directory_name)
-        continue
 
-        choices = {
+        choices = OrderedDict({
             'n': 'none',
             'a': 'all'
-        }
+        })
 
         for idx, file_name in enumerate(file_names):
             choices[str(idx)] = file_name
@@ -113,16 +114,20 @@ for directory_name in directory_names[1:]:
             continue
         elif choice == 'all':
             logger.debug('Adding all roms from {}.'.format(directory_name))
-            unambiguous_names.extend(file_names)
+            for name in file_names:
+                unambiguous_names.append(directory_name + '/' + name)
         else:
             logger.debug('Adding {}.'.format(choice))
-            unambiguous_names.append(choice)
+            unambiguous_names.append(directory_name + '/' + choice)
 
 logger.debug('Automatically detected {} of {} files.'.format(len(unambiguous_names), len(directory_names)))
 logger.debug('{} of {} files need manual selection.'.format(len(ambiguous_names), len(directory_names)))
 
 # include the unlicensed names
 unambiguous_names.extend(unlicensed_names)
+
+for name in unambiguous_names:
+    logger.debug(name)
 
 # create json to document all the file names we want
 file_json = {
