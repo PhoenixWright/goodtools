@@ -41,20 +41,36 @@ def copy_files(file_name):
 
     for file in file_list:
         log.debug('Copying {}...'.format(os.path.basename(file)))
+        extension = os.path.splitext(file)[1]
 
         updated_name = os.path.basename(file)\
-            .replace('.nes', '')\
+            .replace(extension, '')\
             .replace('(U)', '')\
             .replace('(E)', '')\
             .replace('[!]', '')\
             .replace('[U]', '')\
             .replace('[E]', '')\
             .replace('(PRG1)', '')\
-            .replace('(PRG2)', '')\
+            .replace('(PRG2)', '') \
+            .replace('(REV01)', '') \
+            .replace('(REV02)', '') \
             .replace('(REVA)', '')\
             .replace('(REVB)', '')\
             .replace('[b1]', '')\
-            .strip() + '.nes'
+            .replace('[b1+C]', '')\
+            .replace('[b2]', '')\
+            .replace('(V1.0)', '')\
+            .replace('(V1.1)', '') \
+            .replace('(V1.2)', '') \
+            .replace('(M1)', '') \
+            .replace('(M2)', '') \
+            .replace('(M3)', '') \
+            .replace('(M4)', '') \
+            .replace('(M5)', '') \
+            .replace('(M6)', '') \
+            .replace('(M7)', '') \
+            .replace('(M8)', '') \
+            .strip() + extension
 
         if ', The' in updated_name:
             updated_name = updated_name.replace(', The', '')

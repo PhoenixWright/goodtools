@@ -22,6 +22,7 @@ unlicensed_names = []
 
 locale_priority = [
     ['(U)', '[!]'],
+    ['(W)', '[!}'],
     ['(E)', '[!]']
     #'(U) [!]',
     #'(U) (PRG2) [!]',
@@ -58,6 +59,12 @@ for directory_name in directory_names[1:]:
 
     locales_not_matched_count = 0
 
+    choice_idx = 0
+    choices = OrderedDict({
+        'n': 'none',
+        'a': 'all'
+    })
+
     for locale in locale_priority:
         locale_and_exclamation_files = []
         for file_name in file_names:
@@ -80,7 +87,9 @@ for directory_name in directory_names[1:]:
             #logger.debug('Locale for {}: {}'.format(directory_name, locale))
             break
         else:
-            break
+            for file in locale_and_exclamation_files:
+                choices[str(choice_idx)] = file
+                choice_idx += 1
 
     if locales_not_matched_count == len(locale_priority):
         continue
@@ -90,18 +99,11 @@ for directory_name in directory_names[1:]:
     else:
         ambiguous_names.append(directory_name)
 
-        choices = OrderedDict({
-            'n': 'none',
-            'a': 'all'
-        })
-
-        for idx, file_name in enumerate(file_names):
-            choices[str(idx)] = file_name
-
         message = ''
         for key, value in choices.items():
             message += key + ' - ' + value + '\n'
 
+        logger.debug('Choose a rom from {}'.format(directory_name))
         choice = None
         while True:
             user_input = input(message)
