@@ -41,7 +41,27 @@ def copy_files(file_name):
 
     for file in file_list:
         log.debug('Copying {}...'.format(os.path.basename(file)))
-        shutil.copy(file, target_directory)
+
+        updated_name = os.path.basename(file)\
+            .replace('.nes', '')\
+            .replace('(U)', '')\
+            .replace('(E)', '')\
+            .replace('[!]', '')\
+            .replace('[U]', '')\
+            .replace('[E]', '')\
+            .replace('(PRG1)', '')\
+            .replace('(PRG2)', '')\
+            .replace('(REVA)', '')\
+            .replace('(REVB)', '')\
+            .replace('[b1]', '')\
+            .strip() + '.nes'
+
+        if ', The' in updated_name:
+            updated_name = updated_name.replace(', The', '')
+            updated_name = 'The ' + updated_name
+
+        target_path = target_directory + '/' + updated_name
+        shutil.copyfile(file, target_path)
 
 if __name__ == '__main__':
     copy_files('file_list.json')
