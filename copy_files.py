@@ -49,16 +49,22 @@ def copy_files(file_name):
             .replace('(E)', '')\
             .replace('[!]', '')\
             .replace('[U]', '')\
-            .replace('[E]', '')\
+            .replace('[E]', '') \
+            .replace('[M]', '') \
             .replace('(PRG1)', '')\
             .replace('(PRG2)', '') \
             .replace('(REV01)', '') \
             .replace('(REV02)', '') \
+            .replace('(REV03)', '')\
             .replace('(REVA)', '')\
             .replace('(REVB)', '')\
             .replace('[b1]', '')\
             .replace('[b1+C]', '')\
             .replace('[b2]', '')\
+            .replace('[c]', '') \
+            .replace('[C]', '') \
+            .replace('[S]', '') \
+            .replace('[p1]', '')\
             .replace('(V1.0)', '')\
             .replace('(V1.1)', '') \
             .replace('(V1.2)', '') \
@@ -70,6 +76,10 @@ def copy_files(file_name):
             .replace('(M6)', '') \
             .replace('(M7)', '') \
             .replace('(M8)', '') \
+            .replace('(M9)', '') \
+            .replace('(M10)', '') \
+            .replace('(J-Cart)', '') \
+            .replace('(THQ)', '') \
             .strip() + extension
 
         if ', The' in updated_name:
