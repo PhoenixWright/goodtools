@@ -22,8 +22,19 @@ unlicensed_names = []
 
 locale_priority = [
     ['(U)', '[!]'],
-    ['(W)', '[!}'],
-    ['(E)', '[!]']
+    ['(UE)', '[!]'],
+    ['(UA)', '[!]'],
+    ['(W)', '[!]'],
+    ['(E)', '[!]'],
+    ['(JU)', '[!]'],
+    ['(JE)', '[!]'],
+    ['(U)'],
+    ['(UE)'],
+    ['(UE)'],
+    ['(W)'],
+    ['(E)'],
+    ['(JU)'],
+    ['(JE)']
     #'(U) [!]',
     #'(U) (PRG2) [!]',
     #'[U][!]',
@@ -46,7 +57,7 @@ locale_priority = [
 ]
 
 
-for directory_name in directory_names[1:]:
+for directory_name in directory_names:
     file_names = os.listdir(directory_name)
 
     # if the whole directory is unlicensed, just take all the files
@@ -88,10 +99,12 @@ for directory_name in directory_names[1:]:
             break
         else:
             for file in locale_and_exclamation_files:
-                choices[str(choice_idx)] = file
-                choice_idx += 1
+                if file not in choices.values():
+                    choices[str(choice_idx)] = file
+                    choice_idx += 1
 
     if locales_not_matched_count == len(locale_priority):
+        logger.debug('No roms matched for directory: {}'.format(directory_name))
         continue
 
     if final_name:

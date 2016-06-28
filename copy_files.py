@@ -12,7 +12,7 @@ log.addHandler(ch)
 working_directory = sys.argv[1]
 log.info('Extracting items from directory: {}'.format(working_directory))
 
-target_directory = working_directory + '/a'
+target_directory = working_directory + 'a'
 
 try:
     os.stat(target_directory)
@@ -43,6 +43,9 @@ def copy_files(file_name):
         log.debug('Copying {}...'.format(os.path.basename(file)))
         extension = os.path.splitext(file)[1]
 
+        updated_name = os.path.basename(file).split('(')[0].strip() + extension
+
+        '''
         updated_name = os.path.basename(file)\
             .replace(extension, '')\
             .replace('(U)', '')\
@@ -81,6 +84,7 @@ def copy_files(file_name):
             .replace('(J-Cart)', '') \
             .replace('(THQ)', '') \
             .strip() + extension
+        '''
 
         if ', The' in updated_name:
             updated_name = updated_name.replace(', The', '')
